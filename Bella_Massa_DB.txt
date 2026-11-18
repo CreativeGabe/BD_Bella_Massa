@@ -1,0 +1,138 @@
+CREATE TABLE combo(
+ID_do_combo INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Valor_do_combo Numeric(10,2) not null,
+Nome Varchar(40) not null,
+Descrição Varchar(200) not null
+);
+
+CREATE TABLE produto (
+Nome Varchar(250) NOT NULL,
+Descrição Varchar(250) NOT NULL,
+Preço NUMERIC(10,2) NOT NULL,
+Estoque INTEGER NOT NULL,
+Disponibilidade Boolean NOT NULL,
+ID_de_produto INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+);
+
+CREATE TABLE itens_do_combo (
+ID_Item_combo INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Id_de_produto INTEGER NOT NULL,
+ID_do_combo INTEGER NOT NULL,
+Quantidade INTEGER NOT NULL,
+FOREIGN KEY (ID_de_produto)
+REFERENCES produto(ID_de_produto),
+FOREIGN KEY (ID_do_combo)
+REFERENCES combo(ID_do_combo)
+);
+
+CREATE TABLE refrigerante(
+ID_Refri INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Marca varchar(20) NOT NULL,
+Quantidade INTEGER NOT NULL,
+Sabor Varchar(30) NOT NULL,
+Lata_600ml_1l_2l Varchar(5) NOT NULL
+);
+
+CREATE TABLE pizza (
+ID_da_pizza INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+P_M_G_GG Varchar(4) not null,
+Ingredientes Varchar(250) not null
+);
+
+CREATE TABLE refere_se (
+ID_de_produto INTEGER NOT NULL,
+ID_da_pizza INTEGER UNIQUE,
+ID_Refri INTEGER UNIQUE,
+ID_do_combo INTEGER UNIQUE,
+FOREIGN KEY (ID_de_produto)
+references produto(ID_de_produto),
+FOREIGN KEY (ID_da_pizza)
+references pizza(ID_da_pizza),
+FOREIGN KEY (ID_Refri)
+references refrigerante(ID_Refri),
+FOREIGN KEY (ID_do_combo)
+references combo(ID_do_combo),
+ CHECK (
+      (id_da_pizza IS NOT NULL)::INTEGER +
+      (id_refri IS NOT NULL)::INTEGER +
+      (id_do_combo IS NOT NULL)::INTEGER = 1
+   )
+);
+
+CREATE TABLE categoria (
+ID_da_categoria INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Nome varchar(100) not null
+);
+
+CREATE TABLE possui(
+ID_da_categoria INTEGER not null,
+ID_de_produto INTEGER not null,
+FOREIGN KEY (ID_da_categoria) references categoria(ID_da_categoria),
+FOREIGN KEY (ID_de_produto) references produto(ID_de_produto)
+);
+
+CREATE TABLE pedido(
+ID_do_pedido INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Observacoes Varchar(300),
+Hr_pedido Timestamp not null,
+Tmp_entrg Timestamp not null
+);
+
+CREATE TABLE pagamento(
+Forma_do_Pgto Varchar(100) not null,
+Valor_total NUMERIC(10,2) not null,
+Status_de_pgto Varchar(150) not null,
+Data_e_hr_de_pgto timestamp not null,
+ID_transacao INTEGER primary key,
+Valor_unitario NUMERIC(10,2) not null,
+ID_do_pedido INTEGER not null,
+Foreign key (ID_do_pedido) references pedido(ID_do_pedido)
+);
+
+CREATE TABLE itens(
+Quantidade INTEGER Not null,
+ID_dos_itens INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ID_de_produto INTEGER not null,
+FOREIGN KEY(ID_de_produto) REFERENCES produto (ID_de_produto)
+);
+
+CREATE TABLE entregador(
+Nome varchar(100),
+Modelo_da_moto Varchar(100),
+Observações Varchar(500),
+Horario_de_saida timestamp not null,
+Horario_da_entrega timestamp not null,
+Id_da_Entrega INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ID_dos_itens INTEGER not null,
+FOREIGN KEY(ID_dos_itens) REFERENCES itens (ID_dos_itens)
+);
+
+CREATE TABLE endereco(
+Id_de_endereco INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Rua Varchar(200) not null,
+CEP varchar(25) not null,
+Numero INTEGER not null,
+Bairro Varchar(200) not null,
+Cidade Varchar(200)not null,
+Estado Varchar(25) not null
+);
+
+CREATE TABLE cliente(
+ID_do_cliente INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Nome varchar(100) not null,
+Telefone varchar(20) not null
+);
+
+CREATE TABLE tem(
+Id_de_endereco INTEGER,
+ID_do_cliente INTEGER,
+FOREIGN KEY(Id_de_endereco) REFERENCES endereco(Id_de_endereco),
+FOREIGN KEY (ID_do_cliente) REFERENCES cliente(ID_do_cliente)
+);
+
+CREATE TABLE contem(
+ID_do_pedido INTEGER,
+ID_dos_itens INTEGER,
+FOREIGN KEY(ID_do_pedido) REFERENCES pedido (ID_do_pedido),
+FOREIGN KEY(ID_dos_itens) REFERENCES itens (ID_dos_itens)
+);

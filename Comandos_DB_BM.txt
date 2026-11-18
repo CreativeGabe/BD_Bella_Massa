@@ -1,0 +1,11 @@
+INSERT INTO public.categoria (id_da_categoria, nome) VALUES (1, 'Pizzas Salgadas'), (2, 'Pizzas Doces'), (3, 'Bebidas'), (4, 'Combos'), (5, 'Sobremesas');
+
+INSERT INTO public.cliente (id_do_cliente, nome, telefone, id_do_pedido, id_do_endereco) VALUES (3, 'João Romulo Reis', '+551167676942', 1, 1), (4, 'Barbara Gordam Nascimento', '+551123456789', null, 2), (5, 'José Barbosa Santos', '+551140028922', null, 4);
+
+INSERT INTO public.combo (id_do_combo, valor_do_combo, nome, "descrição") VALUES (1, '85.00', 'Combo 2 pizzas médias', 'Duas pizzas médias de escolha');
+
+// COMANDOS DE SELECT
+
+SELECT id_da_categoria, nome from  public.categoria;
+SELECT id_do_cliente, nome, telefone, id_do_pedido, id_do_endereco from public.cliente;
+SELECT id_do_combo, valor_do_combo, nome, "descrição" from public.combo;
